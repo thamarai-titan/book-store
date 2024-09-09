@@ -36,7 +36,29 @@ app.post("/signup", (req, res) => {
     res.send("new data");
   }
 });
-app.post("/signin", (req, res) => {});
+    app.post("/signin", (req, res) => {
+        const username = req.body.username;
+        const password = req.body.password;
+
+        const foundUser = users.find(user => user.username === username);
+
+        if(!foundUser) {
+            res.send("username is wrong");
+        }
+        if(foundUser.password != password){
+            res.send("password is incorrect")
+        }
+        else{
+
+            const token = jwt.sign({
+                username: foundUser.username
+            }, JWT_SECRET)
+
+            res.header("jwt", token);
+
+            res.send("signin successfull")
+        }
+    });
 
 app.get("/details", (req, res) => {});
 
